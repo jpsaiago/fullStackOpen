@@ -62,7 +62,7 @@ export default function App() {
   ];
   return (
     <>
-      {courses.map((data, index) => (
+      {courses.map((data) => (
         <Course key={data.id} course={data} />
       ))}
     </>
