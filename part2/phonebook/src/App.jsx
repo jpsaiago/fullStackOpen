@@ -1,77 +1,49 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Input from "./Input";
+import Person from "./Person";
+import Search from "./Search";
+import axios from "axios";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "040-123456", id: 1 },
-    { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
-    { name: "Dan Abramov", number: "12-43-234345", id: 3 },
-    { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
-  ]);
+  const [persons, setPersons] = useState([]);
   const [newPerson, setNewPerson] = useState({
     name: "",
     number: "",
   });
   const [search, setSearch] = useState("");
-  const filterPeople = (person) => {
+  const searchResults = persons.filter((person) => {
     if (person.name.toLowerCase().includes(search.toLowerCase()) === true) {
       return person;
+    } else {
+      return null;
     }
-  };
-  const searchResults = persons.filter(filterPeople);
-  /*-------------------------------------------------------------------------------------------------------*/
-  const handleChange = (event) => {
-    setNewPerson({ ...newPerson, [event.target.name]: event.target.value });
+  });
+  const dbEffect = () => {
+    axios
+      .get("http://localhost:3001/persons")
+      .then((response) => {
+        setPersons(response.data);
+      })
+      .catch(() => {
+        console.log("unable to fetch people");
+      });
   };
 
-  const handleAddPerson = (event) => {
-    event.preventDefault();
-    if (persons.some((person) => person.name == newPerson) == true) {
-      alert(`${newPerson} is already added to the phonebook`);
-    } else {
-      setPersons([
-        ...persons,
-        { name: newPerson.name, number: newPerson.number },
-      ]);
-    }
-    setNewPerson({ name: "", number: "" });
-  };
+  useEffect(dbEffect, []);
   return (
     <>
       <h1>Phonebook</h1>
       <hr />
-      <h2>Add a new name</h2>
-      <form onSubmit={handleAddPerson}>
-        Name:{" "}
-        <input
-          type="text"
-          value={newPerson.name}
-          onChange={handleChange}
-          name="name"
-        />{" "}
-        Number:{" "}
-        <input
-          type="text"
-          value={newPerson.number}
-          onChange={handleChange}
-          name="number"
-        />{" "}
-        <button type="submit">add</button>
-      </form>
+      <Input
+        persons={persons}
+        setPersons={setPersons}
+        newPerson={newPerson}
+        setNewPerson={setNewPerson}
+      />
       <h2>People</h2>
-      <p>
-        {" "}
-        Search:{" "}
-        <input
-          type="text"
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-          name="name"
-        />
-      </p>
+      <Search search={search} setSearch={setSearch} />
       {searchResults.map((value, index) => (
-        <p key={index}>
-          Name: {value.name}, Number: {value.number}
-        </p>
+        <Person value={value} index={index} />
       ))}
     </>
   );
