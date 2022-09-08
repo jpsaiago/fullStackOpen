@@ -1,3 +1,4 @@
+import axios from "axios";
 export default function Input({
   persons,
   setPersons,
@@ -25,6 +26,7 @@ export default function Input({
       <form onSubmit={handleAddPerson}>
         Name:{" "}
         <input
+          required
           type="text"
           value={newPerson.name}
           onChange={handleChange}
@@ -32,6 +34,7 @@ export default function Input({
         />{" "}
         Number:{" "}
         <input
+          required
           type="text"
           value={newPerson.number}
           onChange={handleChange}

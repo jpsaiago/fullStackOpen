@@ -12,7 +12,7 @@ const App = () => {
   });
   const [search, setSearch] = useState("");
   const searchResults = persons.filter((person) => {
-    if (person.name.toLowerCase().includes(search.toLowerCase()) === true) {
+    if (person.name.toLowerCase().includes(search.toLowerCase())) {
       return person;
     } else {
       return null;
