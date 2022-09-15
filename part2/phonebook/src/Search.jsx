@@ -1,6 +1,6 @@
 export default function Search({ search, setSearch }) {
   return (
-    <p>
+    <h4>
       {" "}
       Search:{" "}
       <input
@@ -11,6 +11,6 @@ export default function Search({ search, setSearch }) {
         }}
         name="name"
       />
-    </p>
+    </h4>
   );
 }

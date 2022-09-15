@@ -1,22 +1,67 @@
-import axios from "axios";
-export default function Input({
-  persons,
-  setPersons,
-  newPerson,
-  setNewPerson,
-}) {
+import { postPerson, putPerson } from "./services/server";
+import { useState } from "react";
+
+export default function Input({ persons, setShouldUpdate, setNotification }) {
+  const [newPerson, setNewPerson] = useState({
+    name: "",
+    number: "",
+  });
   const handleChange = (event) => {
     setNewPerson({ ...newPerson, [event.target.name]: event.target.value });
   };
   const handleAddPerson = (event) => {
     event.preventDefault();
-    if (persons.some((person) => person.name == newPerson) == true) {
-      alert(`${newPerson} is already added to the phonebook`);
+    if (
+      persons.some(
+        (person) => person.name.toLowerCase() === newPerson.name.toLowerCase()
+      ) === true
+    ) {
+      if (window.confirm("Quer atualizar esse número?")) {
+        const matchingId = persons.find(
+          (person) => person.name.toLowerCase() === newPerson.name.toLowerCase()
+        );
+        putPerson(matchingId.id, newPerson)
+          .then(() => {
+            setNotification({
+              message: "Número atualizado com sucesso",
+              contentCode: "success",
+            });
+            setShouldUpdate(true);
+            setTimeout(() => {
+              setNotification({
+                message: "",
+                contentCode: "",
+              });
+            }, 5000);
+          })
+          .catch(() => {
+            setNotification({
+              message: `${newPerson.name} já foi excluído da lista`,
+              contentCode: "error",
+            });
+            setShouldUpdate(true);
+            setTimeout(() => {
+              setNotification({
+                message: "",
+                contentCode: "",
+              });
+            }, 5000);
+          });
+      }
     } else {
-      setPersons([
-        ...persons,
-        { name: newPerson.name, number: newPerson.number },
-      ]);
+      postPerson(newPerson).then(() => {
+        setNotification({
+          message: `${newPerson.name} adicionado com sucesso`,
+          contentCode: "success",
+        });
+        setShouldUpdate(true);
+        setTimeout(() => {
+          setNotification({
+            message: "",
+            contentCode: "",
+          });
+        }, 5000);
+      });
     }
     setNewPerson({ name: "", number: "" });
   };
