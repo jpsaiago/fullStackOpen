@@ -36,11 +36,19 @@ export default function Input({ persons, setShouldUpdate, setNotification }) {
               });
             }, 5000);
           })
-          .catch(() => {
-            setNotification({
-              message: `${newPerson.name} já foi excluído da lista`,
-              contentCode: "error",
-            });
+          .catch((error) => {
+            if (error.response.status === 404) {
+              setNotification({
+                message: `${newPerson.name} já foi excluído da lista`,
+                contentCode: "error",
+              });
+            }
+            if (error.response.status === 400) {
+              setNotification({
+                message: `${error.response.data.error}`,
+                contentCode: "error",
+              });
+            }
             setShouldUpdate(true);
             setTimeout(() => {
               setNotification({
@@ -51,19 +59,34 @@ export default function Input({ persons, setShouldUpdate, setNotification }) {
           });
       }
     } else {
-      postPerson(newPerson).then(() => {
-        setNotification({
-          message: `${newPerson.name} adicionado com sucesso`,
-          contentCode: "success",
-        });
-        setShouldUpdate(true);
-        setTimeout(() => {
+      postPerson(newPerson)
+        .then(() => {
           setNotification({
-            message: "",
-            contentCode: "",
+            message: `${newPerson.name} adicionado com sucesso`,
+            contentCode: "success",
           });
-        }, 5000);
-      });
+          setShouldUpdate(true);
+          setTimeout(() => {
+            setNotification({
+              message: "",
+              contentCode: "",
+            });
+          }, 5000);
+        })
+        .catch((error) => {
+          console.log(error);
+          setNotification({
+            message: `${error.response.data.error}`,
+            contentCode: "error",
+          });
+          setShouldUpdate(true);
+          setTimeout(() => {
+            setNotification({
+              message: "",
+              contentCode: "",
+            });
+          }, 5000);
+        });
     }
     setNewPerson({ name: "", phoneNumber: "" });
   };
