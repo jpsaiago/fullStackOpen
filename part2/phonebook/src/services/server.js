@@ -1,7 +1,6 @@
 import axios from "axios";
 
-const baseURL =
-  "https://fullstackopenexpress-production.up.railway.app/api/persons";
+const baseURL = "http://localhost:1337/api/persons/";
 
 const getAll = () => {
   return axios.get(baseURL);

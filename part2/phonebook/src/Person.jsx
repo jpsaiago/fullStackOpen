@@ -4,7 +4,7 @@ export default function Person({ value, setShouldUpdate, setNotification }) {
   return (
     <div style={{ display: "flex" }}>
       <p>
-        Name: {value.name}, Number: {value.number}, ID: {value.id}
+        Name: {value.name}, Number: {value.phoneNumber}, ID: {value.id}
       </p>
       <button
         style={{ height: "1.5rem", alignSelf: "center", marginLeft: "1rem" }}

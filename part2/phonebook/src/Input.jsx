@@ -4,11 +4,13 @@ import { useState } from "react";
 export default function Input({ persons, setShouldUpdate, setNotification }) {
   const [newPerson, setNewPerson] = useState({
     name: "",
-    number: "",
+    phoneNumber: "",
   });
+
   const handleChange = (event) => {
     setNewPerson({ ...newPerson, [event.target.name]: event.target.value });
   };
+
   const handleAddPerson = (event) => {
     event.preventDefault();
     if (
@@ -63,8 +65,9 @@ export default function Input({ persons, setShouldUpdate, setNotification }) {
         }, 5000);
       });
     }
-    setNewPerson({ name: "", number: "" });
+    setNewPerson({ name: "", phoneNumber: "" });
   };
+
   return (
     <>
       <h2>Add a new name</h2>
@@ -81,9 +84,9 @@ export default function Input({ persons, setShouldUpdate, setNotification }) {
         <input
           required
           type="text"
-          value={newPerson.number}
+          value={newPerson.phoneNumber}
           onChange={handleChange}
-          name="number"
+          name="phoneNumber"
         />{" "}
         <button type="submit">add</button>
       </form>
